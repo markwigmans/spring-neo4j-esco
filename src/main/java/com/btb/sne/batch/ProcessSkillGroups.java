@@ -1,12 +1,11 @@
 package com.btb.sne.batch;
 
-import com.btb.sne.data.SkillGroup;
+import com.btb.sne.model.SkillGroup;
 import com.btb.sne.service.SkillGroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.step.tasklet.TaskletStep;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
@@ -19,25 +18,25 @@ import org.springframework.core.io.ClassPathResource;
 @RequiredArgsConstructor
 public class ProcessSkillGroups {
 
-    public final JobBuilderFactory jobBuilderFactory;
-    public final StepBuilderFactory stepBuilderFactory;
-    public final SkillGroupService service;
+    private final StepBuilderFactory stepBuilderFactory;
+    private final SkillGroupService service;
 
-    @Bean
-    public Step skillGroupsStep() {
+    @Bean("ProcessSkillGroups.step")
+    public Step step() {
         return this.stepBuilderFactory.get("Skill Groups")
-                .<SkillGroup,SkillGroup>chunk(100)
-                .reader(skillGroupsReader())
-                .writer(skillGroupsWriter())
+                .<SkillGroup, SkillGroup>chunk(100)
+                .reader(itemReader())
+                .writer(itemWriter())
                 .build();
     }
 
-    @Bean
-    public FlatFileItemReader<SkillGroup> skillGroupsReader() {
-        final String[] fields = new String[]{"conceptType","conceptUri","preferredLabel","altLabels","hiddenLabels","status","modifiedDate","scopeNote","inScheme","description","code"};
+    @Bean("ProcessSkillGroups.reader")
+    @StepScope
+    public FlatFileItemReader<SkillGroup> itemReader() {
+        final String[] fields = new String[]{"conceptType", "conceptUri", "preferredLabel", "altLabels", "hiddenLabels", "status", "modifiedDate", "scopeNote", "inScheme", "description", "code"};
 
         return new FlatFileItemReaderBuilder<SkillGroup>()
-                .name("skillGroupsReader")
+                .name("ProcessSkillGroups Reader")
                 .resource(new ClassPathResource("skillGroups_nl.csv"))
                 .linesToSkip(1) // skip header
                 .recordSeparatorPolicy(new SeparatorPolicy(fields.length))
@@ -51,8 +50,8 @@ public class ProcessSkillGroups {
 
     }
 
-    @Bean
-    public ItemWriter<SkillGroup> skillGroupsWriter() {
+    @Bean("ProcessSkillGroups.writer")
+    public ItemWriter<SkillGroup> itemWriter() {
         return service::save;
     }
 }

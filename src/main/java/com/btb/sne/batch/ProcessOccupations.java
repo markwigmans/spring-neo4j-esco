@@ -1,12 +1,11 @@
 package com.btb.sne.batch;
 
-import com.btb.sne.data.Occupation;
+import com.btb.sne.model.Occupation;
 import com.btb.sne.service.OccupationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.step.tasklet.TaskletStep;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
@@ -19,25 +18,25 @@ import org.springframework.core.io.ClassPathResource;
 @RequiredArgsConstructor
 public class ProcessOccupations {
 
-    public final JobBuilderFactory jobBuilderFactory;
-    public final StepBuilderFactory stepBuilderFactory;
-    public final OccupationService service;
+    private final StepBuilderFactory stepBuilderFactory;
+    private final OccupationService service;
 
-    @Bean
-    public Step occupationsStep() {
+    @Bean("ProcessOccupations.step")
+    public Step step() {
         return this.stepBuilderFactory.get("Occupations")
-                .<Occupation,Occupation>chunk(100)
-                .reader(occupationsReader())
-                .writer(occupationsWriter())
+                .<Occupation, Occupation>chunk(100)
+                .reader(itemReader())
+                .writer(itemWriter())
                 .build();
     }
 
-    @Bean
-    public FlatFileItemReader<Occupation> occupationsReader() {
-        final String[] fields = new String[]{"conceptType","conceptUri","iscoGroup","preferredLabel","altLabels","hiddenLabels","status","modifiedDate","regulatedProfessionNote","scopeNote","definition","inScheme","description","code"};
+    @Bean("ProcessOccupations.reader")
+    @StepScope
+    public FlatFileItemReader<Occupation> itemReader() {
+        final String[] fields = new String[]{"conceptType", "conceptUri", "iscoGroup", "preferredLabel", "altLabels", "hiddenLabels", "status", "modifiedDate", "regulatedProfessionNote", "scopeNote", "definition", "inScheme", "description", "code"};
 
         return new FlatFileItemReaderBuilder<Occupation>()
-                .name("occupationsReader")
+                .name("ProcessOccupations Reader")
                 .resource(new ClassPathResource("occupations_nl.csv"))
                 .linesToSkip(1) // skip header
                 .recordSeparatorPolicy(new SeparatorPolicy(fields.length))
@@ -51,8 +50,8 @@ public class ProcessOccupations {
 
     }
 
-    @Bean
-    public ItemWriter<Occupation> occupationsWriter() {
+    @Bean("ProcessOccupations.writer")
+    public ItemWriter<Occupation> itemWriter() {
         return service::save;
     }
 }

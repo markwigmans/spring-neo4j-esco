@@ -21,14 +21,20 @@ public class BatchConfiguration extends DefaultBatchConfigurer {
     private final ProcessSkills processSkills;
     private final ProcessSkillGroups processSkillGroups;
     private final ProcessOccupations processOccupations;
+    private final ProcessISCOGroups processISCOGroups;
+    private final ProcessBroaderOccupations processBroaderOccupations;
+    private final ProcessBroaderSkills processBroaderSkills;
 
     @Bean
     public Job job(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory) {
         return jobBuilderFactory.get("ESCO job")
                 .incrementer(new RunIdIncrementer())
-                .start(processSkills.skillsStep())
-                .next(processSkillGroups.skillGroupsStep())
-                .next(processOccupations.occupationsStep())
+                .start(processSkills.step())
+                .next(processSkillGroups.step())
+                //.next(processOccupations.step())
+                //.next(processISCOGroups.step())
+                //.next(processBroaderOccupations.step())
+                .next(processBroaderSkills.step())
                 .listener(JobListenerFactoryBean.getListener(new JobLoggerListener()))
                 .build();
     }

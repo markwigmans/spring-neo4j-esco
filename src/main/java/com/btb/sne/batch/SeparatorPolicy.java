@@ -1,9 +1,9 @@
 package com.btb.sne.batch;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.file.separator.DefaultRecordSeparatorPolicy;
 
-import java.util.StringTokenizer;
-
+@Slf4j
 public class SeparatorPolicy extends DefaultRecordSeparatorPolicy {
 
     private final int fields;
@@ -15,7 +15,12 @@ public class SeparatorPolicy extends DefaultRecordSeparatorPolicy {
     @Override
     public boolean isEndOfRecord(String record) {
         if (super.isEndOfRecord(record)) {
-            int length = record.split(",", -1).length;
+            // remove all quoted text, so we remove ',' in these parts as well
+            String processed = record.replaceAll("\"([^\"]*)\"", "");
+            int length = processed.split(",", -1).length;
+            if (length > fields) {
+                log.warn("length:{}, vale:'{}'", length, record);
+            }
             return length >= fields;
         }
         return false;

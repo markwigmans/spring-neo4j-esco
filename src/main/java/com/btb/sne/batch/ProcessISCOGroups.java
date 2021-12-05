@@ -1,7 +1,7 @@
 package com.btb.sne.batch;
 
-import com.btb.sne.model.Skill;
-import com.btb.sne.service.SkillService;
+import com.btb.sne.model.ISCOGroup;
+import com.btb.sne.service.ISCOGroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -16,43 +16,43 @@ import org.springframework.core.io.ClassPathResource;
 
 @Configuration
 @RequiredArgsConstructor
-public class ProcessSkills {
+public class ProcessISCOGroups {
 
     private final StepBuilderFactory stepBuilderFactory;
-    private final SkillService service;
+    private final ISCOGroupService service;
 
-    @Bean("ProcessSkills.step")
+    @Bean("ProcessISCOGroups.step")
     public Step step() {
-        return this.stepBuilderFactory.get("Skills")
-                .<Skill, Skill>chunk(100)
+        return this.stepBuilderFactory.get("ISCO Groups")
+                .<ISCOGroup, ISCOGroup>chunk(100)
                 .reader(itemReader())
                 .writer(itemWriter())
-                .listener(new StepChunkListener())
                 .build();
     }
 
-    @Bean("ProcessSkills.reader")
+    @Bean("ProcessISCOGroups.reader")
     @StepScope
-    public FlatFileItemReader<Skill> itemReader() {
-        final String[] fields = new String[]{"conceptType", "conceptUri", "skillType", "reuseLevel", "preferredLabel", "altLabels", "hiddenLabels", "status", "modifiedDate", "scopeNote", "definition", "inScheme", "description"};
+    public FlatFileItemReader<ISCOGroup> itemReader() {
+        final String[] fields = new String[]{"conceptType", "conceptUri", "code", "preferredLabel", "altLabels", "inScheme", "description"};
 
-        return new FlatFileItemReaderBuilder<Skill>()
-                .name("ProcessSkills Reader")
-                .resource(new ClassPathResource("skills_nl.csv"))
+        return new FlatFileItemReaderBuilder<ISCOGroup>()
+                .name("ProcessISCOGroups Reader")
+                .resource(new ClassPathResource("ISCOGroups_nl.csv"))
                 .linesToSkip(1) // skip header
                 .recordSeparatorPolicy(new SeparatorPolicy(fields.length))
                 .delimited()
                 .names(fields)
                 .fieldSetMapper(new BeanWrapperFieldSetMapper<>() {{
-                    setTargetType(Skill.class);
+                    setTargetType(ISCOGroup.class);
                 }})
-                .targetType(Skill.class)
+                .targetType(ISCOGroup.class)
                 .build();
 
     }
 
-    @Bean("ProcessSkills.writer")
-    public ItemWriter<Skill> itemWriter() {
+    @Bean("ProcessISCOGroups.writer")
+    public ItemWriter<ISCOGroup> itemWriter() {
         return service::save;
     }
+
 }

@@ -13,8 +13,7 @@ public class JobLoggerListener {
 
     @BeforeJob
     public void beforeJob(JobExecution jobExecution) {
-        log.info(String.format(START_MESSAGE,
-                jobExecution.getJobInstance().getJobName()));
+        log.info(String.format(START_MESSAGE, jobExecution.getJobInstance().getJobName()));
     }
 
     @AfterJob
