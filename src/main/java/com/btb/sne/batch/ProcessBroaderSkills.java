@@ -79,7 +79,7 @@ public class ProcessBroaderSkills {
         private String broaderUri;
     }
 
-    public class BroaderOccupationClassifier implements Classifier<BroaderSkill, ItemWriter<? super BroaderSkill>> {
+    public static class BroaderOccupationClassifier implements Classifier<BroaderSkill, ItemWriter<? super BroaderSkill>> {
         private final ItemWriter<BroaderSkill> groupGroupWriter;
         private final ItemWriter<BroaderSkill> skillSkillGroupWriter;
         private final ItemWriter<BroaderSkill> SkillSkillWriter;

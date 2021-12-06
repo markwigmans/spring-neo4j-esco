@@ -31,9 +31,9 @@ public class BatchConfiguration extends DefaultBatchConfigurer {
                 .incrementer(new RunIdIncrementer())
                 .start(processSkills.step())
                 .next(processSkillGroups.step())
-                //.next(processOccupations.step())
-                //.next(processISCOGroups.step())
-                //.next(processBroaderOccupations.step())
+                .next(processOccupations.step())
+                .next(processISCOGroups.step())
+                .next(processBroaderOccupations.step())
                 .next(processBroaderSkills.step())
                 .listener(JobListenerFactoryBean.getListener(new JobLoggerListener()))
                 .build();
