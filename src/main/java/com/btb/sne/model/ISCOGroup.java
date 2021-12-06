@@ -1,19 +1,23 @@
 package com.btb.sne.model;
 
 import lombok.Data;
-import org.springframework.data.neo4j.core.schema.Id;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@ToString
 @Node
-public class ISCOGroup {
+public class ISCOGroup extends BaseEntity {
     private String conceptType;
-    @Id
-    private String conceptUri;
     private String code;
     private String preferredLabel;
     private String altLabels;
@@ -21,5 +25,5 @@ public class ISCOGroup {
     private String description;
 
     @Relationship(type = "BROADER_THAN", direction = Relationship.Direction.INCOMING)
-    private List<ISCOGroup> broaderNodes = new ArrayList<>();
+    private Set<ISCOGroup> broaderNodes = new HashSet<>();
 }

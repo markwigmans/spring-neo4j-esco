@@ -106,7 +106,7 @@ public class ProcessBroaderOccupations {
     class GroupGroupWriter implements ItemWriter<BroaderOccupation> {
 
         @Override
-        public void write(List<? extends BroaderOccupation> list) throws Exception {
+        public void write(List<? extends BroaderOccupation> list) {
             for (BroaderOccupation item : list) {
                 Optional<ISCOGroup> grp1 = iscoGroupService.get(item.conceptUri);
                 Optional<ISCOGroup> grp2 = iscoGroupService.get(item.broaderUri);
@@ -140,7 +140,7 @@ public class ProcessBroaderOccupations {
     class OccupationOccupationWriter implements ItemWriter<BroaderOccupation> {
 
         @Override
-        public void write(List<? extends BroaderOccupation> list) throws Exception {
+        public void write(List<? extends BroaderOccupation> list) {
             for (BroaderOccupation item : list) {
                 Optional<Occupation> occu1 = occupationService.get(item.conceptUri);
                 Optional<Occupation> occu2 = occupationService.get(item.broaderUri);

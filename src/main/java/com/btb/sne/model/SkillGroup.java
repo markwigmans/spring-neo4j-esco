@@ -1,20 +1,21 @@
 package com.btb.sne.model;
 
-import lombok.Data;
-import org.springframework.data.neo4j.core.schema.Id;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@ToString
 @Node
-public class SkillGroup {
+public class SkillGroup extends BaseEntity {
 
     private String conceptType;
-    @Id
-    private String conceptUri;
     private String preferredLabel;
     private String altLabels;
     private String hiddenLabels;
@@ -26,5 +27,6 @@ public class SkillGroup {
     private String code;
 
     @Relationship(type = "BROADER_THAN", direction = Relationship.Direction.INCOMING)
-    private List<SkillGroup> broaderNodes = new ArrayList<>();
+    private Set<SkillGroup> broaderNodes = new HashSet<>();
 }
+

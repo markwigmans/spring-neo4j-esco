@@ -1,21 +1,24 @@
 package com.btb.sne.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.data.neo4j.core.schema.Id;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@ToString
 @Node
-public class Skill {
+public class Skill extends BaseEntity {
 
     private String conceptType;
-    @Id
-    private String conceptUri;
     private String skillType;
     private String reuseLevel;
     private String preferredLabel;
@@ -29,9 +32,16 @@ public class Skill {
     private String description;
 
     @Relationship(type = "BROADER_THAN", direction = Relationship.Direction.INCOMING)
-    private List<SkillGroup> broaderGroup = new ArrayList<>();
+    private Set<SkillGroup> broaderGroup = new HashSet<>();
 
     @Relationship(type = "BROADER_THAN", direction = Relationship.Direction.INCOMING)
-    private List<Skill> broaderNodes = new ArrayList<>();
+    private Set<Skill> broaderNodes = new HashSet<>();
+
+    @Relationship(type = "ESSENTIAL_FOR", direction = Relationship.Direction.INCOMING)
+    private Set<Skill> essentialSkills = new HashSet<>();
+
+    @Relationship(type = "OPTIONAL_FOR", direction = Relationship.Direction.INCOMING)
+    private Set<Skill> optionalSkills = new HashSet<>();
 }
+
 
