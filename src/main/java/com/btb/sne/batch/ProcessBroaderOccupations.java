@@ -1,5 +1,6 @@
 package com.btb.sne.batch;
 
+import com.btb.sne.config.ApplicationConfig;
 import com.btb.sne.model.ISCOGroup;
 import com.btb.sne.model.Occupation;
 import com.btb.sne.service.ISCOGroupService;
@@ -34,11 +35,12 @@ public class ProcessBroaderOccupations {
     private final StepBuilderFactory stepBuilderFactory;
     private final ISCOGroupService iscoGroupService;
     private final OccupationService occupationService;
+    private final ApplicationConfig config;
 
     @Bean("ProcessBroaderOccupations.step")
     public Step step() {
         return this.stepBuilderFactory.get("Broader Occupation relations")
-                .<BroaderOccupation, BroaderOccupation>chunk(100)
+                .<BroaderOccupation, BroaderOccupation>chunk(config.getChunkSize())
                 .reader(itemReader())
                 .writer(itemWriter())
                 .listener(new StepChunkListener())

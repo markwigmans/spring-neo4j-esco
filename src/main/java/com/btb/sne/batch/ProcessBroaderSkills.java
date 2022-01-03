@@ -1,5 +1,6 @@
 package com.btb.sne.batch;
 
+import com.btb.sne.config.ApplicationConfig;
 import com.btb.sne.model.Skill;
 import com.btb.sne.model.SkillGroup;
 import com.btb.sne.service.SkillGroupService;
@@ -34,11 +35,12 @@ public class ProcessBroaderSkills {
     private final StepBuilderFactory stepBuilderFactory;
     private final SkillGroupService skillGroupService;
     private final SkillService skillService;
+    private final ApplicationConfig config;
 
     @Bean("ProcessBroaderSkills.step")
     public Step step() {
         return this.stepBuilderFactory.get("Broader Skill relations")
-                .<BroaderSkill, BroaderSkill>chunk(100)
+                .<BroaderSkill, BroaderSkill>chunk(config.getChunkSize())
                 .reader(itemReader())
                 .writer(itemWriter())
                 .listener(new StepChunkListener())

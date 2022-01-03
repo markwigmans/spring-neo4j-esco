@@ -1,5 +1,6 @@
 package com.btb.sne.batch;
 
+import com.btb.sne.config.ApplicationConfig;
 import com.btb.sne.model.Occupation;
 import com.btb.sne.service.OccupationService;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +21,15 @@ public class ProcessOccupations {
 
     private final StepBuilderFactory stepBuilderFactory;
     private final OccupationService service;
+    private final ApplicationConfig config;
 
     @Bean("ProcessOccupations.step")
     public Step step() {
         return this.stepBuilderFactory.get("Occupations")
-                .<Occupation, Occupation>chunk(100)
+                .<Occupation, Occupation>chunk(config.getChunkSize())
                 .reader(itemReader())
                 .writer(itemWriter())
+                .listener(new StepChunkListener())
                 .build();
     }
 

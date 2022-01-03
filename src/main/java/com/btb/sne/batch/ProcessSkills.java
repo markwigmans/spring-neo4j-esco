@@ -1,5 +1,6 @@
 package com.btb.sne.batch;
 
+import com.btb.sne.config.ApplicationConfig;
 import com.btb.sne.model.Skill;
 import com.btb.sne.service.SkillService;
 import lombok.RequiredArgsConstructor;
@@ -20,11 +21,12 @@ public class ProcessSkills {
 
     private final StepBuilderFactory stepBuilderFactory;
     private final SkillService service;
+    private final ApplicationConfig config;
 
     @Bean("ProcessSkills.step")
     public Step step() {
         return this.stepBuilderFactory.get("Skills")
-                .<Skill, Skill>chunk(100)
+                .<Skill, Skill>chunk(config.getChunkSize())
                 .reader(itemReader())
                 .writer(itemWriter())
                 .listener(new StepChunkListener())

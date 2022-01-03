@@ -34,5 +34,13 @@ public class Occupation extends BaseEntity {
 
     @Relationship(type = "BROADER_THAN", direction = Relationship.Direction.INCOMING)
     private Set<Occupation> broaderNodes = new HashSet<>();
+
+    //@Relationship(type = "ESSENTIAL_FOR", direction = Relationship.Direction.INCOMING)
+    @Relationship(type = "ESSENTIAL_FOR")
+    private Set<Skill> essentialSkills = new HashSet<>();
+
+    //@Relationship(type = "OPTIONAL_FOR", direction = Relationship.Direction.INCOMING)
+    @Relationship(type = "OPTIONAL_FOR")
+    private Set<Skill> optionalSkills = new HashSet<>();
 }
 

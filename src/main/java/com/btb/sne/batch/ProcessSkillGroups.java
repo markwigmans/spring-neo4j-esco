@@ -1,5 +1,6 @@
 package com.btb.sne.batch;
 
+import com.btb.sne.config.ApplicationConfig;
 import com.btb.sne.model.SkillGroup;
 import com.btb.sne.service.SkillGroupService;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +21,15 @@ public class ProcessSkillGroups {
 
     private final StepBuilderFactory stepBuilderFactory;
     private final SkillGroupService service;
+    private final ApplicationConfig config;
 
     @Bean("ProcessSkillGroups.step")
     public Step step() {
         return this.stepBuilderFactory.get("Skill Groups")
-                .<SkillGroup, SkillGroup>chunk(100)
+                .<SkillGroup, SkillGroup>chunk(config.getChunkSize())
                 .reader(itemReader())
                 .writer(itemWriter())
+                .listener(new StepChunkListener())
                 .build();
     }
 

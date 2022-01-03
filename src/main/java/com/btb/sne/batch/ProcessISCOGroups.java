@@ -1,5 +1,6 @@
 package com.btb.sne.batch;
 
+import com.btb.sne.config.ApplicationConfig;
 import com.btb.sne.model.ISCOGroup;
 import com.btb.sne.service.ISCOGroupService;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +21,15 @@ public class ProcessISCOGroups {
 
     private final StepBuilderFactory stepBuilderFactory;
     private final ISCOGroupService service;
+    private final ApplicationConfig config;
 
     @Bean("ProcessISCOGroups.step")
     public Step step() {
         return this.stepBuilderFactory.get("ISCO Groups")
-                .<ISCOGroup, ISCOGroup>chunk(100)
+                .<ISCOGroup, ISCOGroup>chunk(config.getChunkSize())
                 .reader(itemReader())
                 .writer(itemWriter())
+                .listener(new StepChunkListener())
                 .build();
     }
 
@@ -54,5 +57,4 @@ public class ProcessISCOGroups {
     public ItemWriter<ISCOGroup> itemWriter() {
         return service::save;
     }
-
 }
