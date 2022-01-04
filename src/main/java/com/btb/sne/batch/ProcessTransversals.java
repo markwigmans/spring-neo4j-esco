@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
@@ -39,7 +38,7 @@ public class ProcessTransversals {
     public Step step() {
         return this.stepBuilderFactory.get("Transversals")
                 .<TransversalInput, Skill>chunk(config.getChunkSize())
-                .reader(multiCustomerReader())
+                .reader(multiItemReaders())
                 .processor(itemProcessor())
                 .writer(itemWriter)
                 .listener(new StepChunkListener())
@@ -47,7 +46,7 @@ public class ProcessTransversals {
     }
 
     @Bean("ProcessTransversals.readers")
-    public MultiResourceItemReader<TransversalInput> multiCustomerReader() {
+    public MultiResourceItemReader<TransversalInput> multiItemReaders() {
         Resource[] inputFiles = {
                 new ClassPathResource("transversalSkillsCollection_nl.csv"),
                 new ClassPathResource("ictSkillsCollection_nl.csv"),
@@ -75,7 +74,7 @@ public class ProcessTransversals {
                 .build();
     }
 
-    @Bean
+    @Bean("ProcessTransversals.processor")
     public ItemProcessor<TransversalInput, Skill> itemProcessor() {
         return new ConverterProcessor();
     }

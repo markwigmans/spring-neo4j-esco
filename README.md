@@ -19,19 +19,19 @@
 
 # To Do
 
-- [x] broaderRelationsOccPillar.csv      
-- [x] broaderRelationsSkillPillar.csv    
-- [x] ictSkillsCollection_nl.csv        
-- [x] ISCOGroups_nl.csv                
-- [x] languageSkillsCollection_nl.csv    
-- [x] occupations_nl.csv                 
-- [x] occupationSkillRelations.csv       
-- [x] skillGroups_nl.csv               
-- [x] skills_nl.csv                     
-- [ ] skillsHierarchy_nl.csv           
-- [x] skillSkillRelations.csv            
+- [x] broaderRelationsOccPillar.csv
+- [x] broaderRelationsSkillPillar.csv
+- [x] ictSkillsCollection_nl.csv
+- [x] ISCOGroups_nl.csv
+- [x] languageSkillsCollection_nl.csv
+- [x] occupations_nl.csv
+- [x] occupationSkillRelations.csv
+- [x] skillGroups_nl.csv
+- [x] skills_nl.csv
+- [ ] skillsHierarchy_nl.csv
+- [x] skillSkillRelations.csv
 - [x] transversalSkillsCollection_nl.csv
-- [ ] use validators for checking objects (in not in the item writers)
-- [ ] Incoming/outging relations
+- [ ] use validators for checking objects
+- [ ] Incoming/outgoing relations
 - [ ] write to JPA database as well
 
