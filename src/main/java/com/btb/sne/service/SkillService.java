@@ -19,8 +19,8 @@ public class SkillService {
     private final SkillRepository repository;
 
     @CachePut(CACHE)
-    public void save(Skill skill) {
-        repository.save(skill);
+    public Skill save(Skill skill) {
+        return repository.save(skill);
     }
 
     public void save(List<? extends Skill> skills) {

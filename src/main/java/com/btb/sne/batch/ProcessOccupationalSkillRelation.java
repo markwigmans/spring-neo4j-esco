@@ -44,7 +44,6 @@ public class ProcessOccupationalSkillRelation {
     }
 
     @Bean("ProcessOccupationalSkillRelation.reader")
-    @StepScope
     public FlatFileItemReader<OccupationalSkillRelation> itemReader() {
         final String[] fields = new String[]{"occupationUri", "relationType", "skillType", "skillUri"};
 
@@ -55,9 +54,6 @@ public class ProcessOccupationalSkillRelation {
                 .recordSeparatorPolicy(new SeparatorPolicy(fields.length))
                 .delimited()
                 .names(fields)
-                .fieldSetMapper(new BeanWrapperFieldSetMapper<>() {{
-                    setTargetType(OccupationalSkillRelation.class);
-                }})
                 .targetType(OccupationalSkillRelation.class)
                 .build();
     }

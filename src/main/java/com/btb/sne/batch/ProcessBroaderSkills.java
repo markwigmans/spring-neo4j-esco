@@ -48,7 +48,6 @@ public class ProcessBroaderSkills {
     }
 
     @Bean("ProcessBroaderSkills.reader")
-    @StepScope
     public FlatFileItemReader<BroaderSkill> itemReader() {
         final String[] fields = new String[]{"conceptType", "conceptUri", "broaderType", "broaderUri"};
 
@@ -59,9 +58,6 @@ public class ProcessBroaderSkills {
                 .recordSeparatorPolicy(new SeparatorPolicy(fields.length))
                 .delimited()
                 .names(fields)
-                .fieldSetMapper(new BeanWrapperFieldSetMapper<>() {{
-                    setTargetType(BroaderSkill.class);
-                }})
                 .targetType(BroaderSkill.class)
                 .build();
     }

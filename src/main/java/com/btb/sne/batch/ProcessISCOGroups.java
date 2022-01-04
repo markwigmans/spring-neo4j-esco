@@ -34,7 +34,6 @@ public class ProcessISCOGroups {
     }
 
     @Bean("ProcessISCOGroups.reader")
-    @StepScope
     public FlatFileItemReader<ISCOGroup> itemReader() {
         final String[] fields = new String[]{"conceptType", "conceptUri", "code", "preferredLabel", "altLabels", "inScheme", "description"};
 
@@ -45,9 +44,6 @@ public class ProcessISCOGroups {
                 .recordSeparatorPolicy(new SeparatorPolicy(fields.length))
                 .delimited()
                 .names(fields)
-                .fieldSetMapper(new BeanWrapperFieldSetMapper<>() {{
-                    setTargetType(ISCOGroup.class);
-                }})
                 .targetType(ISCOGroup.class)
                 .build();
 

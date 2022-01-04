@@ -39,7 +39,6 @@ public class ProcessSkillSkillRelation {
     }
 
     @Bean("ProcessSkillSkillRelation.reader")
-    @StepScope
     public FlatFileItemReader<SkillSkillRelation> itemReader() {
         final String[] fields = new String[]{"originalSkillUri", "originalSkillType", "relationType", "relatedSkillType", "relatedSkillUri"};
 
@@ -50,9 +49,6 @@ public class ProcessSkillSkillRelation {
                 .recordSeparatorPolicy(new SeparatorPolicy(fields.length))
                 .delimited()
                 .names(fields)
-                .fieldSetMapper(new BeanWrapperFieldSetMapper<>() {{
-                    setTargetType(SkillSkillRelation.class);
-                }})
                 .targetType(SkillSkillRelation.class)
                 .build();
     }

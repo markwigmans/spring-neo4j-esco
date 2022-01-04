@@ -15,7 +15,7 @@
 | skills_nl.csv                      | ProcessSkills                    |
 | skillsHierarchy_nl.csv             |
 | skillSkillRelations.csv            | ProcessSkillSkillRelation        |
-| transversalSkillsCollection_nl.csv |
+| transversalSkillsCollection_nl.csv | ProcessTransversals |
 
 # To Do
 
@@ -33,4 +33,5 @@
 - [x] transversalSkillsCollection_nl.csv
 - [ ] use validators for checking objects (in not in the item writers)
 - [ ] Incoming/outging relations
+- [ ] write to JPA database as well
 

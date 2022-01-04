@@ -26,6 +26,7 @@ public class BatchConfiguration extends DefaultBatchConfigurer {
     private final ProcessBroaderSkills processBroaderSkills;
     private final ProcessSkillSkillRelation processSkillSkillRelation;
     private final ProcessOccupationalSkillRelation processOccupationalSkillRelation;
+    private final ProcessTransversals processTransversals;
 
     @Bean
     public Job job(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory) {
@@ -39,6 +40,7 @@ public class BatchConfiguration extends DefaultBatchConfigurer {
                 .next(processBroaderSkills.step())
                 .next(processSkillSkillRelation.step())
                 .next(processOccupationalSkillRelation.step())
+                .next(processTransversals.step())
                 .listener(JobListenerFactoryBean.getListener(new JobLoggerListener()))
                 .build();
     }

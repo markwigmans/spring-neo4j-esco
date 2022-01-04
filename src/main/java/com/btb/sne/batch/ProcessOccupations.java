@@ -34,7 +34,6 @@ public class ProcessOccupations {
     }
 
     @Bean("ProcessOccupations.reader")
-    @StepScope
     public FlatFileItemReader<Occupation> itemReader() {
         final String[] fields = new String[]{"conceptType", "conceptUri", "iscoGroup", "preferredLabel", "altLabels", "hiddenLabels", "status", "modifiedDate", "regulatedProfessionNote", "scopeNote", "definition", "inScheme", "description", "code"};
 
@@ -45,9 +44,6 @@ public class ProcessOccupations {
                 .recordSeparatorPolicy(new SeparatorPolicy(fields.length))
                 .delimited()
                 .names(fields)
-                .fieldSetMapper(new BeanWrapperFieldSetMapper<>() {{
-                    setTargetType(Occupation.class);
-                }})
                 .targetType(Occupation.class)
                 .build();
 

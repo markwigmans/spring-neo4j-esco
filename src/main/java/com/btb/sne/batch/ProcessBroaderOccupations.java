@@ -48,7 +48,6 @@ public class ProcessBroaderOccupations {
     }
 
     @Bean("ProcessBroaderOccupations.reader")
-    @StepScope
     public FlatFileItemReader<BroaderOccupation> itemReader() {
         final String[] fields = new String[]{"conceptType", "conceptUri", "broaderType", "broaderUri"};
 
@@ -59,9 +58,6 @@ public class ProcessBroaderOccupations {
                 .recordSeparatorPolicy(new SeparatorPolicy(fields.length))
                 .delimited()
                 .names(fields)
-                .fieldSetMapper(new BeanWrapperFieldSetMapper<>() {{
-                    setTargetType(BroaderOccupation.class);
-                }})
                 .targetType(BroaderOccupation.class)
                 .build();
     }
