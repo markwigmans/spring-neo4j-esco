@@ -9,14 +9,17 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
+import org.springframework.batch.item.file.MultiResourceItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
-import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
+import org.springframework.batch.item.file.builder.MultiResourceItemReaderBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,10 +39,25 @@ public class ProcessTransversals {
     public Step step() {
         return this.stepBuilderFactory.get("Transversals")
                 .<TransversalInput, Skill>chunk(config.getChunkSize())
-                .reader(itemReader())
+                .reader(multiCustomerReader())
                 .processor(itemProcessor())
                 .writer(itemWriter)
                 .listener(new StepChunkListener())
+                .build();
+    }
+
+    @Bean("ProcessTransversals.readers")
+    public MultiResourceItemReader<TransversalInput> multiCustomerReader() {
+        Resource[] inputFiles = {
+                new ClassPathResource("transversalSkillsCollection_nl.csv"),
+                new ClassPathResource("ictSkillsCollection_nl.csv"),
+                new ClassPathResource("languageSkillsCollection_nl.csv")
+        };
+
+        return new MultiResourceItemReaderBuilder<TransversalInput>()
+                .name("multiCustomerReader")
+                .resources(inputFiles)
+                .delegate(itemReader())
                 .build();
     }
 
@@ -49,7 +67,6 @@ public class ProcessTransversals {
 
         return new FlatFileItemReaderBuilder<TransversalInput>()
                 .name("ProcessTransversals Reader")
-                .resource(new ClassPathResource("transversalSkillsCollection_nl.csv"))
                 .linesToSkip(1) // skip header
                 .recordSeparatorPolicy(new SeparatorPolicy(fields.length))
                 .delimited()
