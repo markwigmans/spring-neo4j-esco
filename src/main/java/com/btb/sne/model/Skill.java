@@ -28,7 +28,7 @@ public class Skill extends BaseEntity {
     private String description;
 
     @ToString.Exclude
-    @Relationship(type = "BROADER_THAN", direction = Relationship.Direction.INCOMING)
+    @Relationship(type = "PART_OF")
     private Set<SkillGroup> broaderGroup = new HashSet<>();
 
     @ToString.Exclude
@@ -36,11 +36,11 @@ public class Skill extends BaseEntity {
     private Set<Skill> broaderNodes = new HashSet<>();
 
     @ToString.Exclude
-    @Relationship(type = "ESSENTIAL_FOR", direction = Relationship.Direction.INCOMING)
+    @Relationship(type = "ESSENTIAL_FOR")
     private Set<Skill> essentialSkills = new HashSet<>();
 
     @ToString.Exclude
-    @Relationship(type = "OPTIONAL_FOR", direction = Relationship.Direction.INCOMING)
+    @Relationship(type = "OPTIONAL_FOR")
     private Set<Skill> optionalSkills = new HashSet<>();
 
     @Builder

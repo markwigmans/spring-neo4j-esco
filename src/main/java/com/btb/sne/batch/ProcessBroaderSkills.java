@@ -107,8 +107,8 @@ public class ProcessBroaderSkills {
                 Optional<SkillGroup> grp1 = skillGroupService.get(item.conceptUri);
                 Optional<SkillGroup> grp2 = skillGroupService.get(item.broaderUri);
                 if (grp1.isPresent() && grp2.isPresent()) {
-                    if (grp1.get().getBroaderNodes().add(grp2.get())) {
-                        skillGroupService.save(grp1.get());
+                    if (grp2.get().getBroaderNodes().add(grp1.get())) {
+                        skillGroupService.save(grp2.get());
                     }
                 } else {
                     log.warn("{} : {} : {} : {}", item.conceptUri, grp1.isPresent(), item.broaderUri, grp2.isPresent());

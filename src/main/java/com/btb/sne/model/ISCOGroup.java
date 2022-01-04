@@ -21,6 +21,7 @@ public class ISCOGroup extends BaseEntity {
     private String inScheme;
     private String description;
 
-    @Relationship(type = "BROADER_THAN", direction = Relationship.Direction.INCOMING)
+    @ToString.Exclude
+    @Relationship(type = "BROADER_THAN")
     private Set<ISCOGroup> broaderNodes = new HashSet<>();
 }

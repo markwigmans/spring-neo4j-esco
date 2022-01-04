@@ -32,6 +32,10 @@
 - [x] skillSkillRelations.csv
 - [x] transversalSkillsCollection_nl.csv
 - [ ] use validators for checking objects
-- [ ] Incoming/outgoing relations
+- [x] Incoming/outgoing relations
 - [ ] write to JPA database as well
 
+# Usefull Neo4j commands
+
+## delete all
+``MATCH (n) DETACH DELETE n;``

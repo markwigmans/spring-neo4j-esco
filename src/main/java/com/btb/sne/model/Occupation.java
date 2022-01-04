@@ -29,17 +29,19 @@ public class Occupation extends BaseEntity {
     private String description;
     private String code;
 
-    @Relationship(type = "BROADER_THAN", direction = Relationship.Direction.INCOMING)
+    @ToString.Exclude
+    @Relationship(type = "PART_OF")
     private Set<ISCOGroup> broaderGroup = new HashSet<>();
 
-    @Relationship(type = "BROADER_THAN", direction = Relationship.Direction.INCOMING)
+    @ToString.Exclude
+    @Relationship(type = "BROADER_THAN")
     private Set<Occupation> broaderNodes = new HashSet<>();
 
-    //@Relationship(type = "ESSENTIAL_FOR", direction = Relationship.Direction.INCOMING)
+    @ToString.Exclude
     @Relationship(type = "ESSENTIAL_FOR")
     private Set<Skill> essentialSkills = new HashSet<>();
 
-    //@Relationship(type = "OPTIONAL_FOR", direction = Relationship.Direction.INCOMING)
+    @ToString.Exclude
     @Relationship(type = "OPTIONAL_FOR")
     private Set<Skill> optionalSkills = new HashSet<>();
 }

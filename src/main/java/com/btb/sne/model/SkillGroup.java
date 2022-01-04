@@ -26,7 +26,8 @@ public class SkillGroup extends BaseEntity {
     private String description;
     private String code;
 
-    @Relationship(type = "BROADER_THAN", direction = Relationship.Direction.INCOMING)
+    @ToString.Exclude
+    @Relationship(type = "BROADER_THAN")
     private Set<SkillGroup> broaderNodes = new HashSet<>();
 }
 

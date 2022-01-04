@@ -107,8 +107,8 @@ public class ProcessBroaderOccupations {
                 Optional<ISCOGroup> grp1 = iscoGroupService.get(item.conceptUri);
                 Optional<ISCOGroup> grp2 = iscoGroupService.get(item.broaderUri);
                 if (grp1.isPresent() && grp2.isPresent()) {
-                    if (grp1.get().getBroaderNodes().add(grp2.get())) {
-                        iscoGroupService.save(grp1.get());
+                    if (grp2.get().getBroaderNodes().add(grp1.get())) {
+                        iscoGroupService.save(grp2.get());
                     }
                 } else {
                     log.warn("{} : {} : {} : {}", item.conceptUri, grp1.isPresent(), item.broaderUri, grp2.isPresent());
@@ -143,8 +143,8 @@ public class ProcessBroaderOccupations {
                 Optional<Occupation> occu1 = occupationService.get(item.conceptUri);
                 Optional<Occupation> occu2 = occupationService.get(item.broaderUri);
                 if (occu1.isPresent() && occu2.isPresent()) {
-                    if (occu1.get().getBroaderNodes().add(occu2.get())) {
-                        occupationService.save(occu1.get());
+                    if (occu2.get().getBroaderNodes().add(occu1.get())) {
+                        occupationService.save(occu2.get());
                     }
                 } else {
                     log.warn("{} : {} : {} : {}", item.conceptUri, occu1.isPresent(), item.broaderUri, occu2.isPresent());
