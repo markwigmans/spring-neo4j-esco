@@ -15,7 +15,7 @@
 | skills_nl.csv                      | ProcessSkills                    |
 | skillsHierarchy_nl.csv             |
 | skillSkillRelations.csv            | ProcessSkillSkillRelation        |
-| transversalSkillsCollection_nl.csv | ProcessTransversals |
+| transversalSkillsCollection_nl.csv | ProcessTransversals              |
 
 # To Do
 
