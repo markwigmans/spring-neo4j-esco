@@ -5,10 +5,8 @@ import com.btb.sne.model.Occupation;
 import com.btb.sne.model.Skill;
 import com.btb.sne.service.OccupationService;
 import com.btb.sne.service.SkillService;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -48,7 +46,7 @@ public class ProcessOccupationalSkillRelation {
     @Bean("ProcessOccupationalSkillRelation.reader")
     @StepScope
     public FlatFileItemReader<OccupationalSkillRelation> itemReader() {
-        final String[] fields = new String[]{"occupationUri","relationType","skillType","skillUri"};
+        final String[] fields = new String[]{"occupationUri", "relationType", "skillType", "skillUri"};
 
         return new FlatFileItemReaderBuilder<OccupationalSkillRelation>()
                 .name("ProcessOccupationalSkillRelation Reader")
@@ -57,7 +55,9 @@ public class ProcessOccupationalSkillRelation {
                 .recordSeparatorPolicy(new SeparatorPolicy(fields.length))
                 .delimited()
                 .names(fields)
-                .fieldSetMapper(new BeanWrapperFieldSetMapper<>() {{setTargetType(OccupationalSkillRelation.class);}})
+                .fieldSetMapper(new BeanWrapperFieldSetMapper<>() {{
+                    setTargetType(OccupationalSkillRelation.class);
+                }})
                 .targetType(OccupationalSkillRelation.class)
                 .build();
     }
@@ -82,11 +82,17 @@ public class ProcessOccupationalSkillRelation {
                                 case "essential" -> essentials.add(skill.get());
                                 default -> log.warn("unknown type: {}", s.getRelationType());
                             }
+                        } else {
+                            log.warn("Skill {} does not exist ", s.getSkillUri());
                         }
                     });
-                    occupation.get().getOptionalSkills().addAll(optionals);
-                    occupation.get().getEssentialSkills().addAll(essentials);
-                    occupationService.save(occupation.get());
+                    // if value creates a change
+                    if (occupation.get().getOptionalSkills().addAll(optionals) &&
+                            occupation.get().getEssentialSkills().addAll(essentials)) {
+                        occupationService.save(occupation.get());
+                    }
+                } else {
+                    log.warn("Occupation {} does not exist ", key);
                 }
             });
         };
@@ -94,10 +100,10 @@ public class ProcessOccupationalSkillRelation {
 
     @Data
     public static class OccupationalSkillRelation {
-         private String occupationUri;
-         private String relationType;
-         private String skillType;
-         private String skillUri;
+        private String occupationUri;
+        private String relationType;
+        private String skillType;
+        private String skillUri;
     }
 }
 

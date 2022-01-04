@@ -17,20 +17,20 @@
 | skillSkillRelations.csv            | ProcessSkillSkillRelation        |
 | transversalSkillsCollection_nl.csv |
 
-### Reference Documentation
+# To Do
 
-For further reference, please consider the following sections:
-
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/2.6.1/maven-plugin/reference/html/)
-* [Create an OCI image](https://docs.spring.io/spring-boot/docs/2.6.1/maven-plugin/reference/html/#build-image)
-* [Spring Data Neo4j](https://docs.spring.io/spring-boot/docs/2.6.1/reference/htmlsingle/#boot-features-neo4j)
-* [Spring Batch](https://docs.spring.io/spring-boot/docs/2.6.1/reference/htmlsingle/#howto-batch-applications)
-
-### Guides
-
-The following guides illustrate how to use some features concretely:
-
-* [Accessing Data with Neo4j](https://spring.io/guides/gs/accessing-data-neo4j/)
-* [Creating a Batch Service](https://spring.io/guides/gs/batch-processing/)
+- [x] broaderRelationsOccPillar.csv      
+- [x] broaderRelationsSkillPillar.csv    
+- [ ] ictSkillsCollection_nl.csv        
+- [x] ISCOGroups_nl.csv                
+- [ ] languageSkillsCollection_nl.csv    
+- [x] occupations_nl.csv                 
+- [x] occupationSkillRelations.csv       
+- [x] skillGroups_nl.csv               
+- [x] skills_nl.csv                     
+- [ ] skillsHierarchy_nl.csv           
+- [x] skillSkillRelations.csv            
+- [x] transversalSkillsCollection_nl.csv
+- [ ] use validators for checking objects (in not in the item writers)
+- [ ] Incoming/outging relations
 
