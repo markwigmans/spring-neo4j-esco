@@ -6,9 +6,9 @@
 |------------------------------------|----------------------------------|
 | broaderRelationsOccPillar.csv      | ProcessBroaderOccupations        |
 | broaderRelationsSkillPillar.csv    | ProcessBroaderSkills             |
-| ictSkillsCollection_nl.csv         |
+| ictSkillsCollection_nl.csv         | ProcessTransversals              |
 | ISCOGroups_nl.csv                  | ProcessISCOGroups                |
-| languageSkillsCollection_nl.csv    |
+| languageSkillsCollection_nl.csv    | ProcessTransversals              |
 | occupations_nl.csv                 | ProcessOccupations               |
 | occupationSkillRelations.csv       | ProcessOccupationalSkillRelation |
 | skillGroups_nl.csv                 | ProcessSkillGroups               |
@@ -21,9 +21,9 @@
 
 - [x] broaderRelationsOccPillar.csv      
 - [x] broaderRelationsSkillPillar.csv    
-- [ ] ictSkillsCollection_nl.csv        
+- [x] ictSkillsCollection_nl.csv        
 - [x] ISCOGroups_nl.csv                
-- [ ] languageSkillsCollection_nl.csv    
+- [x] languageSkillsCollection_nl.csv    
 - [x] occupations_nl.csv                 
 - [x] occupationSkillRelations.csv       
 - [x] skillGroups_nl.csv               
