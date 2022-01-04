@@ -1,5 +1,6 @@
 package com.btb.sne.batch;
 
+import com.btb.sne.config.ApplicationConfig;
 import com.btb.sne.model.ISCOGroup;
 import com.btb.sne.model.Occupation;
 import com.btb.sne.service.ISCOGroupService;
@@ -34,11 +35,12 @@ public class ProcessBroaderOccupations {
     private final StepBuilderFactory stepBuilderFactory;
     private final ISCOGroupService iscoGroupService;
     private final OccupationService occupationService;
+    private final ApplicationConfig config;
 
     @Bean("ProcessBroaderOccupations.step")
     public Step step() {
         return this.stepBuilderFactory.get("Broader Occupation relations")
-                .<BroaderOccupation, BroaderOccupation>chunk(100)
+                .<BroaderOccupation, BroaderOccupation>chunk(config.getChunkSize())
                 .reader(itemReader())
                 .writer(itemWriter())
                 .listener(new StepChunkListener())
@@ -111,8 +113,9 @@ public class ProcessBroaderOccupations {
                 Optional<ISCOGroup> grp1 = iscoGroupService.get(item.conceptUri);
                 Optional<ISCOGroup> grp2 = iscoGroupService.get(item.broaderUri);
                 if (grp1.isPresent() && grp2.isPresent()) {
-                    grp1.get().getBroaderNodes().add(grp2.get());
-                    iscoGroupService.save(grp1.get());
+                    if (grp1.get().getBroaderNodes().add(grp2.get())) {
+                        iscoGroupService.save(grp1.get());
+                    }
                 } else {
                     log.warn("{} : {} : {} : {}", item.conceptUri, grp1.isPresent(), item.broaderUri, grp2.isPresent());
                 }
@@ -123,13 +126,14 @@ public class ProcessBroaderOccupations {
     class OccupationGroupWriter implements ItemWriter<BroaderOccupation> {
 
         @Override
-        public void write(List<? extends BroaderOccupation> list) throws Exception {
+        public void write(List<? extends BroaderOccupation> list) {
             for (BroaderOccupation item : list) {
                 Optional<Occupation> occupation = occupationService.get(item.conceptUri);
                 Optional<ISCOGroup> group = iscoGroupService.get(item.broaderUri);
                 if (occupation.isPresent() && group.isPresent()) {
-                    occupation.get().getBroaderGroup().add(group.get());
-                    occupationService.save(occupation.get());
+                    if (occupation.get().getBroaderGroup().add(group.get())) {
+                        occupationService.save(occupation.get());
+                    }
                 } else {
                     log.warn("{} : {} : {} : {}", item.conceptUri, occupation.isPresent(), item.broaderUri, group.isPresent());
                 }
@@ -145,13 +149,13 @@ public class ProcessBroaderOccupations {
                 Optional<Occupation> occu1 = occupationService.get(item.conceptUri);
                 Optional<Occupation> occu2 = occupationService.get(item.broaderUri);
                 if (occu1.isPresent() && occu2.isPresent()) {
-                    occu1.get().getBroaderNodes().add(occu2.get());
-                    occupationService.save(occu1.get());
+                    if (occu1.get().getBroaderNodes().add(occu2.get())) {
+                        occupationService.save(occu1.get());
+                    }
                 } else {
                     log.warn("{} : {} : {} : {}", item.conceptUri, occu1.isPresent(), item.broaderUri, occu2.isPresent());
                 }
             }
         }
     }
-
 }

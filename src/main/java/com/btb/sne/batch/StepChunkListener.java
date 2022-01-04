@@ -10,7 +10,7 @@ public class StepChunkListener implements ChunkListener {
 
     @Override
     public void afterChunk(ChunkContext context) {
-        log.info("Called afterChunk({})", context.getStepContext().getStepExecution().getStepName());
+        // log.info("Called afterChunk({})", context.getStepContext().getStepExecution().getStepName());
     }
 
     @Override
