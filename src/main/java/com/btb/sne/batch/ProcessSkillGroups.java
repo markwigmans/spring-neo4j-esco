@@ -2,11 +2,9 @@ package com.btb.sne.batch;
 
 import com.btb.sne.config.ApplicationConfig;
 import com.btb.sne.model.SkillGroup;
-import com.btb.sne.service.SkillGroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.context.annotation.Bean;
@@ -18,15 +16,26 @@ import org.springframework.core.io.ClassPathResource;
 public class ProcessSkillGroups {
 
     private final StepBuilderFactory stepBuilderFactory;
-    private final SkillGroupService service;
+    private final NeoWriters neoWriters;
+    private final JpaWriters jpaWriters;
     private final ApplicationConfig config;
 
-    @Bean("ProcessSkillGroups.step")
-    public Step step() {
+    @Bean("ProcessSkillGroups.neo.step")
+    public Step neoStep() {
         return this.stepBuilderFactory.get("Skill Groups")
                 .<SkillGroup, SkillGroup>chunk(config.getChunkSize())
                 .reader(itemReader())
-                .writer(itemWriter())
+                .writer(neoWriters.skillGroupItemWriter())
+                .listener(new StepChunkListener())
+                .build();
+    }
+
+    @Bean("ProcessSkillGroups.jpa.step")
+    public Step jpaStep() {
+        return this.stepBuilderFactory.get("Skill Groups")
+                .<SkillGroup, SkillGroup>chunk(config.getChunkSize())
+                .reader(itemReader())
+                .writer(jpaWriters.skillGroupItemWriter())
                 .listener(new StepChunkListener())
                 .build();
     }
@@ -44,11 +53,5 @@ public class ProcessSkillGroups {
                 .names(fields)
                 .targetType(SkillGroup.class)
                 .build();
-
-    }
-
-    @Bean("ProcessSkillGroups.writer")
-    public ItemWriter<SkillGroup> itemWriter() {
-        return service::save;
     }
 }

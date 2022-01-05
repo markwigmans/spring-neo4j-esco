@@ -1,10 +1,8 @@
 package com.btb.sne.service;
 
+import com.btb.sne.mapping.SkillMapper;
 import com.btb.sne.model.Skill;
-import com.btb.sne.model.SkillRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,21 +12,28 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SkillService {
 
-    private final String CACHE = "skills";
+    private final N_SkillService neoService;
+    private final J_SkillService jpaService;
+    private final SkillMapper skillMapper;
 
-    private final SkillRepository repository;
-
-    @CachePut(CACHE)
-    public Skill save(Skill skill) {
-        return repository.save(skill);
+    public Skill save(Skill skill, RepoType type) {
+        return switch (type) {
+            case NEO -> skillMapper.from(neoService.save(skillMapper.toNeo(skill)));
+            case JPA -> skillMapper.from(jpaService.save(skillMapper.toJpa(skill)));
+        };
     }
 
-    public void save(List<? extends Skill> skills) {
-        repository.saveAll(skills);
+    public void save(List<? extends Skill> skills, RepoType type) {
+        switch (type) {
+            case NEO -> neoService.save(skills.stream().map(skillMapper::toNeo).toList());
+            case JPA -> jpaService.save(skills.stream().map(skillMapper::toJpa).toList());
+        }
     }
 
-    @Cacheable(value = CACHE)
-    public Optional<Skill> get(String uri) {
-        return repository.findById(uri);
+    public Optional<Skill> get(String uri, RepoType type) {
+        return switch (type) {
+            case NEO -> skillMapper.fromNeo(neoService.get(uri));
+            case JPA -> skillMapper.fromJpa(jpaService.get(uri));
+        };
     }
 }

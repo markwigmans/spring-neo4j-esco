@@ -2,11 +2,9 @@ package com.btb.sne.batch;
 
 import com.btb.sne.config.ApplicationConfig;
 import com.btb.sne.model.Skill;
-import com.btb.sne.service.SkillService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.context.annotation.Bean;
@@ -18,20 +16,31 @@ import org.springframework.core.io.ClassPathResource;
 public class ProcessSkills {
 
     private final StepBuilderFactory stepBuilderFactory;
-    private final SkillService service;
+    private final NeoWriters neoWriters;
+    private final JpaWriters jpaWriters;
     private final ApplicationConfig config;
 
-    @Bean("ProcessSkills.step")
-    public Step step() {
+    @Bean("ProcessSkills.neo.step")
+    public Step neoStep() {
         return this.stepBuilderFactory.get("Skills")
                 .<Skill, Skill>chunk(config.getChunkSize())
                 .reader(itemReader())
-                .writer(itemWriter())
+                .writer(neoWriters.skillItemWriter())
                 .listener(new StepChunkListener())
                 .build();
     }
 
-    @Bean("ProcessSkills.reader")
+    @Bean("ProcessSkills.jpa.step")
+    public Step jpaStep() {
+        return this.stepBuilderFactory.get("Skills")
+                .<Skill, Skill>chunk(config.getChunkSize())
+                .reader(itemReader())
+                .writer(jpaWriters.skillItemWriter())
+                .listener(new StepChunkListener())
+                .build();
+    }
+
+    @Bean
     public FlatFileItemReader<Skill> itemReader() {
         final String[] fields = new String[]{"conceptType", "conceptUri", "skillType", "reuseLevel", "preferredLabel", "altLabels", "hiddenLabels", "status", "modifiedDate", "scopeNote", "definition", "inScheme", "description"};
 
@@ -44,11 +53,5 @@ public class ProcessSkills {
                 .names(fields)
                 .targetType(Skill.class)
                 .build();
-
-    }
-
-    @Bean("ProcessSkills.writer")
-    public ItemWriter<Skill> itemWriter() {
-        return service::save;
     }
 }

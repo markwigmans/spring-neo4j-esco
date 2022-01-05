@@ -1,6 +1,5 @@
-package com.btb.sne.model;
+package com.btb.sne.model.neo;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,7 +13,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
-public abstract class BaseEntity {
+public abstract class N_BaseEntity {
 
     @Id
     private String conceptUri;
@@ -22,7 +21,7 @@ public abstract class BaseEntity {
     @Version
     private Long version;
 
-    public BaseEntity(String conceptUri) {
+    public N_BaseEntity(String conceptUri) {
         this.conceptUri = conceptUri;
     }
 

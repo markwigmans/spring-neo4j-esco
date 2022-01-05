@@ -2,11 +2,9 @@ package com.btb.sne.batch;
 
 import com.btb.sne.config.ApplicationConfig;
 import com.btb.sne.model.Occupation;
-import com.btb.sne.service.OccupationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.context.annotation.Bean;
@@ -18,15 +16,26 @@ import org.springframework.core.io.ClassPathResource;
 public class ProcessOccupations {
 
     private final StepBuilderFactory stepBuilderFactory;
-    private final OccupationService service;
+    private final NeoWriters neoWriters;
+    private final JpaWriters jpaWriters;
     private final ApplicationConfig config;
 
-    @Bean("ProcessOccupations.step")
-    public Step step() {
+    @Bean("ProcessOccupations.neo.step")
+    public Step neoStep() {
         return this.stepBuilderFactory.get("Occupations")
                 .<Occupation, Occupation>chunk(config.getChunkSize())
                 .reader(itemReader())
-                .writer(itemWriter())
+                .writer(neoWriters.occupationItemWriter())
+                .listener(new StepChunkListener())
+                .build();
+    }
+
+    @Bean("ProcessOccupations.jpa.step")
+    public Step jpaStep() {
+        return this.stepBuilderFactory.get("Occupations")
+                .<Occupation, Occupation>chunk(config.getChunkSize())
+                .reader(itemReader())
+                .writer(jpaWriters.occupationItemWriter())
                 .listener(new StepChunkListener())
                 .build();
     }
@@ -44,10 +53,5 @@ public class ProcessOccupations {
                 .names(fields)
                 .targetType(Occupation.class)
                 .build();
-    }
-
-    @Bean("ProcessOccupations.writer")
-    public ItemWriter<Occupation> itemWriter() {
-        return service::save;
     }
 }

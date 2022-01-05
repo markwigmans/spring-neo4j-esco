@@ -1,7 +1,7 @@
 package com.btb.sne.service;
 
-import com.btb.sne.model.ISCOGroup;
-import com.btb.sne.model.ISCOGroupRepository;
+import com.btb.sne.model.neo.N_ISCOGroup;
+import com.btb.sne.model.neo.N_ISCOGroupRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,19 +10,19 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ISCOGroupService {
+public class N_ISCOGroupService {
 
-    private final ISCOGroupRepository repository;
+    private final N_ISCOGroupRepository repository;
 
-    public void save(ISCOGroup group) {
+    public void save(N_ISCOGroup group) {
         repository.save(group);
     }
 
-    public void save(List<? extends ISCOGroup> group) {
+    public void save(List<? extends N_ISCOGroup> group) {
         repository.saveAll(group);
     }
 
-    public Optional<ISCOGroup> get(String uri) {
+    public Optional<N_ISCOGroup> get(String uri) {
         return repository.findById(uri);
     }
 }
