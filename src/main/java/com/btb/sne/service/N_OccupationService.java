@@ -14,8 +14,8 @@ public class N_OccupationService {
 
     private final N_OccupationRepository repository;
 
-    public void save(N_Occupation occupation) {
-        repository.save(occupation);
+    public N_Occupation save(N_Occupation occupation) {
+        return repository.save(occupation);
     }
 
     public void save(List<? extends N_Occupation> occupations) {
@@ -24,5 +24,9 @@ public class N_OccupationService {
 
     public Optional<N_Occupation> get(String uri) {
         return repository.findById(uri);
+    }
+
+    public void deleteAll() {
+        repository.deleteAll();
     }
 }

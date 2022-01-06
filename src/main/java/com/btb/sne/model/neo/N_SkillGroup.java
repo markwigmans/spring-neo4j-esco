@@ -12,7 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
-@Node
+@Node("SkillGroup")
 public class N_SkillGroup extends N_BaseEntity {
 
     private String conceptType;

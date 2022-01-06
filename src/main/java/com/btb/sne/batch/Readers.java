@@ -1,6 +1,8 @@
 package com.btb.sne.batch;
 
+import com.btb.sne.config.ApplicationConfig;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.context.annotation.Bean;
@@ -8,7 +10,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
 @Configuration
+@RequiredArgsConstructor
 public class Readers {
+
+    private final ApplicationConfig config;
 
     @Bean
     public FlatFileItemReader<BroaderOccupation> broaderOccupationItemReader() {
@@ -22,6 +27,7 @@ public class Readers {
                 .delimited()
                 .names(fields)
                 .targetType(BroaderOccupation.class)
+                .maxItemCount(config.getMaxCount())
                 .build();
     }
 
@@ -45,6 +51,7 @@ public class Readers {
                 .delimited()
                 .names(fields)
                 .targetType(BroaderSkill.class)
+                .maxItemCount(config.getMaxCount())
                 .build();
     }
 
@@ -68,6 +75,7 @@ public class Readers {
                 .delimited()
                 .names(fields)
                 .targetType(SkillSkillRelation.class)
+                .maxItemCount(config.getMaxCount())
                 .build();
     }
 
@@ -119,6 +127,7 @@ public class Readers {
                 .delimited()
                 .names(fields)
                 .targetType(OccupationalSkillRelation.class)
+                .maxItemCount(config.getMaxCount())
                 .build();
     }
 

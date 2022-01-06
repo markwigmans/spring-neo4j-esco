@@ -63,6 +63,19 @@ public class NeoWriters {
         return items -> iscoGroupService.save(items.stream().map(iscoGroupMapper::toNeo).toList());
     }
 
+    @Bean("neo.TransversalInput")
+    public ItemWriter<Readers.TransversalInput> transversalInputSkillItemWriter() {
+        return records -> records.forEach(item -> {
+            final N_Skill skill = skillService.get(item.getConceptUri()).orElseGet(() -> skillService.save(skillMapper.toNeo(item)));
+            String[] items = item.getBroaderConceptUri().split("\\|");
+            List<N_Skill> skills = Arrays.stream(items).map(String::trim).map(skillService::get).flatMap(Optional::stream).toList();
+            List<N_SkillGroup> skillGroups = Arrays.stream(items).map(String::trim).map(skillGroupService::get).flatMap(Optional::stream).toList();
+            skill.getBroaderNodes().addAll(skills);
+            skill.getBroaderGroup().addAll(skillGroups);
+            skillService.save(skill);
+        });
+    }
+
     @Bean("neo.SkillSkillRelation")
     public ItemWriter<Readers.SkillSkillRelation> skillSkillRelationItemWriter() {
         return items -> {

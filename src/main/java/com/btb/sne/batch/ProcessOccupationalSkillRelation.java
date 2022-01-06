@@ -21,7 +21,7 @@ public class ProcessOccupationalSkillRelation {
 
     @Bean("ProcessOccupationalSkillRelation.neo.step")
     public Step neoStep() {
-        return this.stepBuilderFactory.get("Occupational Skill relations")
+        return this.stepBuilderFactory.get("Neo4j - Occupational Skill relations")
                 .<Readers.OccupationalSkillRelation, Readers.OccupationalSkillRelation>chunk(config.getChunkSize())
                 .reader(readers.occupationalSkillRelationItemReader())
                 .writer(neoWriters.occupationalSkillRelationItemWriter())
@@ -31,7 +31,8 @@ public class ProcessOccupationalSkillRelation {
 
     @Bean("ProcessOccupationalSkillRelation.jpa.step")
     public Step jpaStep() {
-        return this.stepBuilderFactory.get("Occupational Skill relations")
+        return this.stepBuilderFactory.get("JPA - Occupational Skill relations")
+                .transactionManager(jpaWriters.transactionManager(null))
                 .<Readers.OccupationalSkillRelation, Readers.OccupationalSkillRelation>chunk(config.getChunkSize())
                 .reader(readers.occupationalSkillRelationItemReader())
                 .writer(jpaWriters.occupationalSkillRelationItemWriter())

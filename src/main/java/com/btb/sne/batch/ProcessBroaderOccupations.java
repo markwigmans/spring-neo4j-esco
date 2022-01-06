@@ -25,7 +25,7 @@ public class ProcessBroaderOccupations {
 
     @Bean("ProcessBroaderOccupations.neo.step")
     public Step neoStep() {
-        return this.stepBuilderFactory.get("Broader Occupation relations")
+        return this.stepBuilderFactory.get("Neo4j - Broader Occupation relations")
                 .<Readers.BroaderOccupation, Readers.BroaderOccupation>chunk(config.getChunkSize())
                 .reader(readers.broaderOccupationItemReader())
                 .writer(neoWriters.broaderOccupationItemWriter())
@@ -35,7 +35,8 @@ public class ProcessBroaderOccupations {
 
     @Bean("ProcessBroaderOccupations.jpa.step")
     public Step jpaStep() {
-        return this.stepBuilderFactory.get("Broader Occupation relations")
+        return this.stepBuilderFactory.get("JPA - Broader Occupation relations")
+                .transactionManager(jpaWriters.transactionManager(null))
                 .<Readers.BroaderOccupation, Readers.BroaderOccupation>chunk(config.getChunkSize())
                 .reader(readers.broaderOccupationItemReader())
                 .writer(jpaWriters.broaderOccupationItemWriter())

@@ -14,8 +14,8 @@ public class J_OccupationService {
 
     private final J_OccupationRepository repository;
 
-    public void save(J_Occupation occupation) {
-        repository.save(occupation);
+    public J_Occupation save(J_Occupation occupation) {
+        return repository.save(occupation);
     }
 
     public void save(List<? extends J_Occupation> occupations) {
@@ -24,5 +24,9 @@ public class J_OccupationService {
 
     public Optional<J_Occupation> get(String uri) {
         return repository.findById(uri);
+    }
+
+    public void deleteAll() {
+        repository.deleteAll();
     }
 }

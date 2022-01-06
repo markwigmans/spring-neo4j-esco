@@ -25,4 +25,8 @@ public class N_SkillService {
     public Optional<N_Skill> get(String uri) {
         return repository.findById(uri);
     }
+
+    public void deleteAll() {
+        repository.deleteAll();
+    }
 }

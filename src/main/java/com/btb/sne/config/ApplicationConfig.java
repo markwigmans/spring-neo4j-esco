@@ -10,4 +10,7 @@ public class ApplicationConfig {
 
     @Value("${chunk.size:100}")
     private int chunkSize;
+
+    @Value("${max.count:1000000}")
+    private int maxCount;
 }

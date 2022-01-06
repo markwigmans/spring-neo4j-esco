@@ -14,8 +14,8 @@ public class N_ISCOGroupService {
 
     private final N_ISCOGroupRepository repository;
 
-    public void save(N_ISCOGroup group) {
-        repository.save(group);
+    public N_ISCOGroup save(N_ISCOGroup group) {
+        return repository.save(group);
     }
 
     public void save(List<? extends N_ISCOGroup> group) {
@@ -24,5 +24,9 @@ public class N_ISCOGroupService {
 
     public Optional<N_ISCOGroup> get(String uri) {
         return repository.findById(uri);
+    }
+
+    public void deleteAll() {
+        repository.deleteAll();
     }
 }

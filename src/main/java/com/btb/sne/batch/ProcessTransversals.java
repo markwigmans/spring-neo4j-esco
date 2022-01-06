@@ -1,7 +1,6 @@
 package com.btb.sne.batch;
 
 import com.btb.sne.config.ApplicationConfig;
-import com.btb.sne.model.Skill;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -20,28 +19,25 @@ public class ProcessTransversals {
     private final ApplicationConfig config;
     private final NeoWriters neoWriters;
     private final JpaWriters jpaWriters;
-    private final NeoProcessors neoProcessors;
-    private final JpaProcessors jpaProcessors;
     private final Readers readers;
 
     @Bean("ProcessTransversals.neo.step")
     public Step neoStep() {
-        return this.stepBuilderFactory.get("Transversals")
-                .<Readers.TransversalInput, Skill>chunk(config.getChunkSize())
+        return this.stepBuilderFactory.get("Neo4j - Transversals")
+                .<Readers.TransversalInput, Readers.TransversalInput>chunk(config.getChunkSize())
                 .reader(multiItemReaders())
-                .processor(neoProcessors.transversalInputItemProcessor())
-                .writer(neoWriters.skillItemWriter())
+                .writer(neoWriters.transversalInputSkillItemWriter())
                 .listener(new StepChunkListener())
                 .build();
     }
 
     @Bean("ProcessTransversals.jpa.step")
     public Step jpaStep() {
-        return this.stepBuilderFactory.get("Transversals")
-                .<Readers.TransversalInput, Skill>chunk(config.getChunkSize())
+        return this.stepBuilderFactory.get("JPA - Transversals")
+                .transactionManager(jpaWriters.transactionManager(null))
+                .<Readers.TransversalInput, Readers.TransversalInput>chunk(config.getChunkSize())
                 .reader(multiItemReaders())
-                .processor(jpaProcessors.transversalInputItemProcessor())
-                .writer(jpaWriters.skillItemWriter())
+                .writer(jpaWriters.transversalInputSkillItemWriter())
                 .listener(new StepChunkListener())
                 .build();
     }

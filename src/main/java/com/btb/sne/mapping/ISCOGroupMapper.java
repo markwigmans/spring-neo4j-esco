@@ -9,7 +9,10 @@ import org.mapstruct.Mapper;
 public interface ISCOGroupMapper {
 
     N_ISCOGroup toNeo(ISCOGroup iscoGroup);
+
     J_ISCOGroup toJpa(ISCOGroup iscoGroup);
+
     ISCOGroup from(N_ISCOGroup iscoGroup);
+
     ISCOGroup from(J_ISCOGroup iscoGroup);
 }

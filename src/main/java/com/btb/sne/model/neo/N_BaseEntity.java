@@ -9,7 +9,7 @@ import org.springframework.data.neo4j.core.schema.Node;
 
 import java.util.Objects;
 
-@Node
+@Node("Entity")
 @Getter
 @Setter
 @NoArgsConstructor

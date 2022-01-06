@@ -1,9 +1,13 @@
 package com.btb.sne.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class ISCOGroup  {
+@NoArgsConstructor
+@AllArgsConstructor
+public class ISCOGroup {
 
     private String conceptUri;
     private String conceptType;

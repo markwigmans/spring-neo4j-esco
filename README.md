@@ -38,4 +38,5 @@
 # Usefull Neo4j commands
 
 ## delete all
+
 ``MATCH (n) DETACH DELETE n;``

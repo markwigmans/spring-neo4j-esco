@@ -22,7 +22,7 @@ public class ProcessISCOGroups {
 
     @Bean("ProcessISCOGroups.neo.step")
     public Step neoStep() {
-        return this.stepBuilderFactory.get("ISCO Groups")
+        return this.stepBuilderFactory.get("Neo4j - ISCO Groups")
                 .<ISCOGroup, ISCOGroup>chunk(config.getChunkSize())
                 .reader(itemReader())
                 .writer(neoWriters.iscoGroupItemWriter())
@@ -32,7 +32,8 @@ public class ProcessISCOGroups {
 
     @Bean("ProcessISCOGroups.jpa.step")
     public Step jpaStep() {
-        return this.stepBuilderFactory.get("ISCO Groups")
+        return this.stepBuilderFactory.get("JPA - ISCO Groups")
+                .transactionManager(jpaWriters.transactionManager(null))
                 .<ISCOGroup, ISCOGroup>chunk(config.getChunkSize())
                 .reader(itemReader())
                 .writer(jpaWriters.iscoGroupItemWriter())

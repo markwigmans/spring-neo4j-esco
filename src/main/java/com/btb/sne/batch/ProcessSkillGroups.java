@@ -22,7 +22,7 @@ public class ProcessSkillGroups {
 
     @Bean("ProcessSkillGroups.neo.step")
     public Step neoStep() {
-        return this.stepBuilderFactory.get("Skill Groups")
+        return this.stepBuilderFactory.get("Neo4j - Skill Groups")
                 .<SkillGroup, SkillGroup>chunk(config.getChunkSize())
                 .reader(itemReader())
                 .writer(neoWriters.skillGroupItemWriter())
@@ -32,7 +32,8 @@ public class ProcessSkillGroups {
 
     @Bean("ProcessSkillGroups.jpa.step")
     public Step jpaStep() {
-        return this.stepBuilderFactory.get("Skill Groups")
+        return this.stepBuilderFactory.get("JPA - Skill Groups")
+                .transactionManager(jpaWriters.transactionManager(null))
                 .<SkillGroup, SkillGroup>chunk(config.getChunkSize())
                 .reader(itemReader())
                 .writer(jpaWriters.skillGroupItemWriter())

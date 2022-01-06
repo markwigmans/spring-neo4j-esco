@@ -18,11 +18,15 @@ public class J_SkillService {
         return repository.save(skill);
     }
 
-    public void save(List<? extends J_Skill> skills) {
+    public void save(List<J_Skill> skills) {
         repository.saveAll(skills);
     }
 
     public Optional<J_Skill> get(String uri) {
         return repository.findById(uri);
+    }
+
+    public void deleteAll() {
+        repository.deleteAll();
     }
 }

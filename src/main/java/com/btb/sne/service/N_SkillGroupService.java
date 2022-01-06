@@ -14,8 +14,8 @@ public class N_SkillGroupService {
 
     private final N_SkillGroupRepository repository;
 
-    public void save(N_SkillGroup skillGroup) {
-        repository.save(skillGroup);
+    public N_SkillGroup save(N_SkillGroup skillGroup) {
+        return repository.save(skillGroup);
     }
 
     public void save(List<? extends N_SkillGroup> skillGroups) {
@@ -24,5 +24,9 @@ public class N_SkillGroupService {
 
     public Optional<N_SkillGroup> get(String uri) {
         return repository.findById(uri);
+    }
+
+    public void deleteAll() {
+        repository.deleteAll();
     }
 }

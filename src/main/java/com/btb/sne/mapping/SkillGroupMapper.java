@@ -9,7 +9,10 @@ import org.mapstruct.Mapper;
 public interface SkillGroupMapper {
 
     N_SkillGroup toNeo(SkillGroup skillGroup);
+
     J_SkillGroup toJpa(SkillGroup skillGroup);
+
     SkillGroup from(N_SkillGroup skillGroup);
+
     SkillGroup from(J_SkillGroup skillGroup);
 }

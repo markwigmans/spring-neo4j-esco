@@ -5,11 +5,9 @@ import org.springframework.batch.core.Job;
 import org.springframework.batch.core.configuration.annotation.DefaultBatchConfigurer;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.job.builder.FlowBuilder;
 import org.springframework.batch.core.job.flow.Flow;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.core.listener.JobListenerFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -29,6 +27,7 @@ public class BatchConfiguration extends DefaultBatchConfigurer {
     private final ProcessSkillSkillRelation processSkillSkillRelation;
     private final ProcessOccupationalSkillRelation processOccupationalSkillRelation;
     private final ProcessTransversals processTransversals;
+    private final JobLoggerListener jobLoggerListener;
 
     @Bean
     public Job job(JobBuilderFactory jobBuilderFactory) {
@@ -37,7 +36,7 @@ public class BatchConfiguration extends DefaultBatchConfigurer {
                 .start(neoFlow())
                 .next(jpaFlow())
                 .end()
-                .listener(JobListenerFactoryBean.getListener(new JobLoggerListener()))
+                .listener(jobLoggerListener)
                 .build();
     }
 
@@ -45,11 +44,11 @@ public class BatchConfiguration extends DefaultBatchConfigurer {
         return new FlowBuilder<Flow>("Neo4J flow")
                 .start(processSkills.neoStep())
                 .next(processSkillGroups.neoStep())
+                .next(processTransversals.neoStep())
+                .next(processSkillSkillRelation.neoStep())
+                .next(processBroaderSkills.neoStep())
                 .next(processOccupations.neoStep())
                 .next(processISCOGroups.neoStep())
-                .next(processSkillSkillRelation.neoStep())
-                .next(processTransversals.neoStep())
-                .next(processBroaderSkills.neoStep())
                 .next(processBroaderOccupations.neoStep())
                 .next(processOccupationalSkillRelation.neoStep())
                 .build();
@@ -59,11 +58,11 @@ public class BatchConfiguration extends DefaultBatchConfigurer {
         return new FlowBuilder<Flow>("JPA flow")
                 .start(processSkills.jpaStep())
                 .next(processSkillGroups.jpaStep())
+                .next(processTransversals.jpaStep())
+                .next(processSkillSkillRelation.jpaStep())
+                .next(processBroaderSkills.jpaStep())
                 .next(processOccupations.jpaStep())
                 .next(processISCOGroups.jpaStep())
-                .next(processSkillSkillRelation.jpaStep())
-                .next(processTransversals.jpaStep())
-                .next(processBroaderSkills.jpaStep())
                 .next(processBroaderOccupations.jpaStep())
                 .next(processOccupationalSkillRelation.jpaStep())
                 .build();

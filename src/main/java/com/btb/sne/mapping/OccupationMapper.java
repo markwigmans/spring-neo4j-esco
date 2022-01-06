@@ -9,7 +9,10 @@ import org.mapstruct.Mapper;
 public interface OccupationMapper {
 
     N_Occupation toNeo(Occupation occupation);
+
     J_Occupation toJpa(Occupation occupation);
+
     Occupation from(N_Occupation occupation);
+
     Occupation from(J_Occupation occupation);
 }

@@ -25,7 +25,7 @@ public class ProcessBroaderSkills {
 
     @Bean("ProcessBroaderSkills.neo.step")
     public Step neoStep() {
-        return this.stepBuilderFactory.get("Broader Skill relations")
+        return this.stepBuilderFactory.get("Neo4j - Broader Skill relations")
                 .<Readers.BroaderSkill, Readers.BroaderSkill>chunk(config.getChunkSize())
                 .reader(readers.broaderSkillItemReader())
                 .writer(neoWriters.broaderSkillItemWriter())
@@ -35,7 +35,8 @@ public class ProcessBroaderSkills {
 
     @Bean("ProcessBroaderSkills.jpa.step")
     public Step jpaStep() {
-        return this.stepBuilderFactory.get("Broader Skill relations")
+        return this.stepBuilderFactory.get("JPA - Broader Skill relations")
+                .transactionManager(jpaWriters.transactionManager(null))
                 .<Readers.BroaderSkill, Readers.BroaderSkill>chunk(config.getChunkSize())
                 .reader(readers.broaderSkillItemReader())
                 .writer(jpaWriters.broaderSkillItemWriter())
@@ -67,4 +68,4 @@ public class ProcessBroaderSkills {
             }
         }
     }
- }
+}

@@ -22,7 +22,7 @@ public class ProcessOccupations {
 
     @Bean("ProcessOccupations.neo.step")
     public Step neoStep() {
-        return this.stepBuilderFactory.get("Occupations")
+        return this.stepBuilderFactory.get("Neo4j - Occupations")
                 .<Occupation, Occupation>chunk(config.getChunkSize())
                 .reader(itemReader())
                 .writer(neoWriters.occupationItemWriter())
@@ -32,7 +32,8 @@ public class ProcessOccupations {
 
     @Bean("ProcessOccupations.jpa.step")
     public Step jpaStep() {
-        return this.stepBuilderFactory.get("Occupations")
+        return this.stepBuilderFactory.get("JPA - Occupations")
+                .transactionManager(jpaWriters.transactionManager(null))
                 .<Occupation, Occupation>chunk(config.getChunkSize())
                 .reader(itemReader())
                 .writer(jpaWriters.occupationItemWriter())

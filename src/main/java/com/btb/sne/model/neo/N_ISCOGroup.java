@@ -12,7 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
-@Node
+@Node("ISCOGroup")
 public class N_ISCOGroup extends N_BaseEntity {
     private String conceptType;
     private String code;

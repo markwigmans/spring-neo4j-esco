@@ -12,7 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
-@Node
+@Node("Occupation")
 public class N_Occupation extends N_BaseEntity {
 
     private String conceptType;

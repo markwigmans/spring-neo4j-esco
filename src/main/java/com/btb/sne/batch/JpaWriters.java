@@ -21,10 +21,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.support.ClassifierCompositeItemWriter;
 import org.springframework.batch.item.support.builder.ClassifierCompositeItemWriterBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.classify.Classifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
 import java.util.*;
 
 import static java.util.stream.Collectors.groupingBy;
@@ -33,6 +39,18 @@ import static java.util.stream.Collectors.groupingBy;
 @RequiredArgsConstructor
 @Slf4j
 public class JpaWriters {
+
+    @Autowired
+    private DataSource dataSource;
+
+    @Bean("jpa.transactionManager")
+    @Primary
+    public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+        final JpaTransactionManager tm = new JpaTransactionManager();
+        tm.setDataSource(dataSource);
+        tm.setEntityManagerFactory(entityManagerFactory);
+        return tm;
+    }
 
     private final J_SkillService skillService;
     private final J_SkillGroupService skillGroupService;
@@ -53,17 +71,30 @@ public class JpaWriters {
         return items -> skillGroupService.save(items.stream().map(skillGroupMapper::toJpa).toList());
     }
 
-    @Bean("neo.Occupation")
+    @Bean("jpa.Occupation")
     public ItemWriter<Occupation> occupationItemWriter() {
         return items -> occupationService.save(items.stream().map(occupationMapper::toJpa).toList());
     }
 
-    @Bean("neo.ISCOGroup")
+    @Bean("jpa.ISCOGroup")
     public ItemWriter<ISCOGroup> iscoGroupItemWriter() {
         return items -> iscoGroupService.save(items.stream().map(iscoGroupMapper::toJpa).toList());
     }
 
-    @Bean("neo.SkillSkillRelation")
+    @Bean("jpa.TransversalInput")
+    public ItemWriter<Readers.TransversalInput> transversalInputSkillItemWriter() {
+        return records -> records.forEach(item -> {
+            final J_Skill skill = skillService.get(item.getConceptUri()).orElseGet(() -> skillService.save(skillMapper.toJpa(item)));
+            String[] items = item.getBroaderConceptUri().split("\\|");
+            List<J_Skill> skills = Arrays.stream(items).map(String::trim).map(skillService::get).flatMap(Optional::stream).toList();
+            List<J_SkillGroup> skillGroups = Arrays.stream(items).map(String::trim).map(skillGroupService::get).flatMap(Optional::stream).toList();
+            skill.getBroaderNodes().addAll(skills);
+            skill.getBroaderGroup().addAll(skillGroups);
+            skillService.save(skill);
+        });
+    }
+
+    @Bean("jpa.SkillSkillRelation")
     public ItemWriter<Readers.SkillSkillRelation> skillSkillRelationItemWriter() {
         return items -> {
             for (Readers.SkillSkillRelation item : items) {
