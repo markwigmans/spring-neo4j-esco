@@ -10,6 +10,7 @@ import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 @RequiredArgsConstructor
@@ -19,6 +20,7 @@ public class ProcessOccupations {
     private final NeoWriters neoWriters;
     private final JpaWriters jpaWriters;
     private final ApplicationConfig config;
+    private final PlatformTransactionManager tm;
 
     @Bean("ProcessOccupations.neo.step")
     public Step neoStep() {
@@ -33,7 +35,7 @@ public class ProcessOccupations {
     @Bean("ProcessOccupations.jpa.step")
     public Step jpaStep() {
         return this.stepBuilderFactory.get("JPA - Occupations")
-                .transactionManager(jpaWriters.transactionManager(null))
+                .transactionManager(tm)
                 .<Occupation, Occupation>chunk(config.getChunkSize())
                 .reader(itemReader())
                 .writer(jpaWriters.occupationItemWriter())

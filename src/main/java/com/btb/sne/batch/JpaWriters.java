@@ -21,16 +21,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.support.ClassifierCompositeItemWriter;
 import org.springframework.batch.item.support.builder.ClassifierCompositeItemWriterBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.classify.Classifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
 
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
 import java.util.*;
 
 import static java.util.stream.Collectors.groupingBy;
@@ -39,18 +33,6 @@ import static java.util.stream.Collectors.groupingBy;
 @RequiredArgsConstructor
 @Slf4j
 public class JpaWriters {
-
-    @Autowired
-    private DataSource dataSource;
-
-    @Bean("jpa.transactionManager")
-    @Primary
-    public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
-        final JpaTransactionManager tm = new JpaTransactionManager();
-        tm.setDataSource(dataSource);
-        tm.setEntityManagerFactory(entityManagerFactory);
-        return tm;
-    }
 
     private final J_SkillService skillService;
     private final J_SkillGroupService skillGroupService;

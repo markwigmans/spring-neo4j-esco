@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 @RequiredArgsConstructor
@@ -20,6 +21,7 @@ public class ProcessTransversals {
     private final NeoWriters neoWriters;
     private final JpaWriters jpaWriters;
     private final Readers readers;
+    private final PlatformTransactionManager tm;
 
     @Bean("ProcessTransversals.neo.step")
     public Step neoStep() {
@@ -34,7 +36,7 @@ public class ProcessTransversals {
     @Bean("ProcessTransversals.jpa.step")
     public Step jpaStep() {
         return this.stepBuilderFactory.get("JPA - Transversals")
-                .transactionManager(jpaWriters.transactionManager(null))
+                .transactionManager(tm)
                 .<Readers.TransversalInput, Readers.TransversalInput>chunk(config.getChunkSize())
                 .reader(multiItemReaders())
                 .writer(jpaWriters.transversalInputSkillItemWriter())

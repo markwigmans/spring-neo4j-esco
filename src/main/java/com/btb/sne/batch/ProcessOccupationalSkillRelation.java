@@ -7,6 +7,7 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 @RequiredArgsConstructor
@@ -18,6 +19,7 @@ public class ProcessOccupationalSkillRelation {
     private final Readers readers;
     private final NeoWriters neoWriters;
     private final JpaWriters jpaWriters;
+    private final PlatformTransactionManager tm;
 
     @Bean("ProcessOccupationalSkillRelation.neo.step")
     public Step neoStep() {
@@ -32,7 +34,7 @@ public class ProcessOccupationalSkillRelation {
     @Bean("ProcessOccupationalSkillRelation.jpa.step")
     public Step jpaStep() {
         return this.stepBuilderFactory.get("JPA - Occupational Skill relations")
-                .transactionManager(jpaWriters.transactionManager(null))
+                .transactionManager(tm)
                 .<Readers.OccupationalSkillRelation, Readers.OccupationalSkillRelation>chunk(config.getChunkSize())
                 .reader(readers.occupationalSkillRelationItemReader())
                 .writer(jpaWriters.occupationalSkillRelationItemWriter())

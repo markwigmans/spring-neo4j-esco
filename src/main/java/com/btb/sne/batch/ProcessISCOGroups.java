@@ -10,6 +10,7 @@ import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 @RequiredArgsConstructor
@@ -19,6 +20,7 @@ public class ProcessISCOGroups {
     private final NeoWriters neoWriters;
     private final JpaWriters jpaWriters;
     private final ApplicationConfig config;
+    private final PlatformTransactionManager tm;
 
     @Bean("ProcessISCOGroups.neo.step")
     public Step neoStep() {
@@ -33,7 +35,7 @@ public class ProcessISCOGroups {
     @Bean("ProcessISCOGroups.jpa.step")
     public Step jpaStep() {
         return this.stepBuilderFactory.get("JPA - ISCO Groups")
-                .transactionManager(jpaWriters.transactionManager(null))
+                .transactionManager(tm)
                 .<ISCOGroup, ISCOGroup>chunk(config.getChunkSize())
                 .reader(itemReader())
                 .writer(jpaWriters.iscoGroupItemWriter())
