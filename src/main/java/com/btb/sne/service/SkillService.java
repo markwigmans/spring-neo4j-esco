@@ -1,10 +1,9 @@
 package com.btb.sne.service;
 
+import com.btb.sne.mapping.MapperUtils;
+import com.btb.sne.mapping.SkillMapper;
 import com.btb.sne.model.Skill;
-import com.btb.sne.model.SkillRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,21 +13,35 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SkillService {
 
-    private final String CACHE = "skills";
+    private final N_SkillService neoService;
+    private final J_SkillService jpaService;
+    private final SkillMapper mapper;
 
-    private final SkillRepository repository;
-
-    @CachePut(CACHE)
-    public Skill save(Skill skill) {
-        return repository.save(skill);
+    public Skill save(Skill entity, RepoType type) {
+        return switch (type) {
+            case NEO -> mapper.from(neoService.save(mapper.toNeo(entity)));
+            case JPA -> mapper.from(jpaService.save(mapper.toJpa(entity)));
+        };
     }
 
-    public void save(List<? extends Skill> skills) {
-        repository.saveAll(skills);
+    public void save(List<? extends Skill> entities, RepoType type) {
+        switch (type) {
+            case NEO -> neoService.save(entities.stream().map(mapper::toNeo).toList());
+            case JPA -> jpaService.save(entities.stream().map(mapper::toJpa).toList());
+        }
     }
 
-    @Cacheable(value = CACHE)
-    public Optional<Skill> get(String uri) {
-        return repository.findById(uri);
+    public Optional<Skill> get(String uri, RepoType type) {
+        return switch (type) {
+            case NEO -> MapperUtils.wrap(mapper.from(MapperUtils.unwrap(neoService.get(uri))));
+            case JPA -> MapperUtils.wrap(mapper.from(MapperUtils.unwrap(jpaService.get(uri))));
+        };
+    }
+
+    public void deleteAll(RepoType type) {
+        switch (type) {
+            case NEO -> neoService.deleteAll();
+            case JPA -> jpaService.deleteAll();
+        }
     }
 }
