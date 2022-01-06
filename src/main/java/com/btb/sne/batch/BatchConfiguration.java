@@ -33,9 +33,9 @@ public class BatchConfiguration extends DefaultBatchConfigurer {
     public Job job(JobBuilderFactory jobBuilderFactory) {
         return jobBuilderFactory.get("ESCO job")
                 .incrementer(new RunIdIncrementer())
-                .start(neoFlow())
-                .next(jpaFlow())
-                .end()
+                .start(jpaFlow())
+                .next(neoFlow())
+                .build()
                 .listener(jobLoggerListener)
                 .build();
     }
