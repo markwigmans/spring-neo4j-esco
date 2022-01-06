@@ -13,4 +13,7 @@ public class ApplicationConfig {
 
     @Value("${max.count:1000000}")
     private int maxCount;
+
+    @Value("${delete.all:true}")
+    private boolean delete;
 }
