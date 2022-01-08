@@ -8,6 +8,10 @@ a RDBMS database.
 
 The is to test Spring Batch and Neo4J performance (compared to an RDBMS).
 
+## System Overview
+
+![System Overview](system-overview.png)
+
 # CSV Files
 
 | File                               | Class                            |
