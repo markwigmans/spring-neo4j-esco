@@ -1,5 +1,13 @@
 # Getting Started
 
+Load [ESCO](https://ec.europa.eu/esco/portal/) into RDBMS and after that into Neo4j.
+The framework [Spring Batch](https://spring.io/projects/spring-batch) is used for the transformation.
+
+All CSV files are read into a Neo$j database, then the steps are repeated but then the output is sent to
+a RDBMS database.
+
+The is to test Spring Batch and Neo4J performance (compared to an RDBMS).
+
 # CSV Files
 
 | File                               | Class                            |
