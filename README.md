@@ -21,7 +21,7 @@ The is to test Spring Batch and Neo4J performance (compared to an RDBMS).
 | occupationSkillRelations.csv       | ProcessOccupationalSkillRelation |
 | skillGroups_nl.csv                 | ProcessSkillGroups               |
 | skills_nl.csv                      | ProcessSkills                    |
-| skillsHierarchy_nl.csv             |
+| skillsHierarchy_nl.csv             | -                                |
 | skillSkillRelations.csv            | ProcessSkillSkillRelation        |
 | transversalSkillsCollection_nl.csv | ProcessTransversals              |
 
@@ -39,9 +39,8 @@ The is to test Spring Batch and Neo4J performance (compared to an RDBMS).
 - [ ] skillsHierarchy_nl.csv
 - [x] skillSkillRelations.csv
 - [x] transversalSkillsCollection_nl.csv
-- [ ] use validators for checking objects
 - [x] Incoming/outgoing relations
-- [ ] write to JPA database as well
+- [x] write to JPA database as well
 
 # Usefull Neo4j commands
 
